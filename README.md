@@ -1,6 +1,3 @@
-
-commen truffle sais quelle clef utiliser ?
-
 # Tips
 
 ### Ganache CLI pour lancer une EVM en local
@@ -29,8 +26,9 @@ Dans _Run_ seletionner _injected web3_ pour utiliser metamask
 ### Web3js
 `https://www.npmjs.com/package/web3`
 
+
 ```
-sudo npm install web3 --save
+sudo npm install web3:0.20.7 --save
 ```
 
 # Sources
@@ -43,6 +41,8 @@ sudo npm install web3 --save
 `http://erc20token.sonnguyen.ws/en/latest/`
 
 ganache-cli (`https://www.npmjs.com/package/ganache-cli`) au lieu de ethereumjs-testrpc
+
+On peut aussi utiliser le soft "desktop" pour avoir l'explorer en GUI.
 
 ### OpenZeppelin implementation
 `https://github.com/OpenZeppelin/openzeppelin-solidity/tree/master/contracts/token/ERC20`
