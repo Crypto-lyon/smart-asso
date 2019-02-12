@@ -1,9 +1,45 @@
 
-# ERC 20
+commen truffle sais quelle clef utiliser ?
+
+# Tips
+
+### Ganache CLI pour lancer une EVM en local
+```
+npm install -g ganache-cli
+# puis ganache-cli
+```
+
+### Compilation
+
+Permet de générer les fichier ABI
+```
+truffle compile
+```
+
+### Déployement:
+```
+truffle deploy --reset --network development # après setup de truffle-config.js
+```
+
+### Remix
+`http://remix.ethereum.org`
+Dans _Run_ seletionner _injected web3_ pour utiliser metamask
+
+
+### Web3js
+`https://www.npmjs.com/package/web3`
+
+```
+sudo npm install web3 --save
+```
+
+# Sources
+
+##  ERC 20
 
 `https://eips.ethereum.org/EIPS/eip-20`
 
-## tuto
+###  tuto
 `http://erc20token.sonnguyen.ws/en/latest/`
 
 ganache-cli (`https://www.npmjs.com/package/ganache-cli`) au lieu de ethereumjs-testrpc

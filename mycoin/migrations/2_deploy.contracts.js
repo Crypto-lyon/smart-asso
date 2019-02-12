@@ -1,8 +1,11 @@
-const IcoToken = artifacts.require('IcoToken');
-const IcoContract = artifacts.require('IcoContract');
+//const IcoToken = artifacts.require('IcoToken');
+//const IcoContract = artifacts.require('IcoContract');
+const Mortal = artifacts.require('Mortal');
 
 module.exports = function(deployer) {
-  deployer.deploy(
+
+  deployer.deploy(Mortal);
+  /*deployer.deploy(
     IcoToken,
     'Test Token',
     'TST',
@@ -23,5 +26,5 @@ module.exports = function(deployer) {
         return instance.setIcoContract(IcoContract.address);
       });
     });
-  });
+  });*/
 };
