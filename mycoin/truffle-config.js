@@ -24,6 +24,9 @@
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
+let HDWalletProvider = require("truffle-hdwallet-provider");
+let mnemonic = "foot tape guess scale grant need snow proud switch smart hungry extra";
+
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -70,11 +73,10 @@ module.exports = {
     // },
 
     // Useful for private networks
-    // private: {
-      // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
-      // network_id: 2111,   // This network is yours, in the cloud.
-      // production: true    // Treats this network as if it was a public net. (default: false)
-    // }
+    private: {
+      provider: () => new HDWalletProvider(mnemonic, `https://dev.ethereum-lyon.fr`),
+      network_id: "*",       // Any network (default: none)
+    }
   },
 
   // Set default mocha options here, use special reporters etc.

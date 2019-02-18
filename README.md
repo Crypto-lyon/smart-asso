@@ -4,7 +4,7 @@ tester `ethers.js`
 
 # Tips
 
-### Ganache CLI pour lancer une EVM en local
+### Ganache CLI pour lancer une EVM en local (sinon utiliser https://dev.ethereum-lyon.fr)
 ```
 npm install -g ganache-cli
 # puis ganache-cli
@@ -20,6 +20,8 @@ truffle compile
 ### Déployement:
 ```
 truffle deploy --reset --network development # après setup de truffle-config.js
+OU
+truffle deploy --reset --network private
 ```
 
 ### Remix

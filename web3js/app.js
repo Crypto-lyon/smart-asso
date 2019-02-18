@@ -1,7 +1,7 @@
 const Web3 = require('web3');
 
 // set the provider you want from Web3.providers
-web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+web3 = new Web3(new Web3.providers.HttpProvider('https://dev.ethereum-lyon.fr'));
 
 // Web3 API Version
 console.log(`web3 version: ${web3.version.api}`); // 0.20.x
@@ -15,8 +15,7 @@ web3.eth.defaultAccount = web3.eth.accounts[0]; // Adresse utilisée pour le gas
 // Provient du build Truffle
 const contractAbi = require('./abi.json');
 
-const contract =  web3.eth.contract(contractAbi).at('0x3448a15700a5422Db13Fc0E811765526DD8E95F3');
-
+const contract =  web3.eth.contract(contractAbi).at('0x19D30AbCCd4E7Fdb7599b1f9f5222e9CbC6F1221');
 
 
 /*
@@ -47,9 +46,9 @@ contract.getOrganizationInfo.call((e, r) => {
 })
 
 /*let member = {
-	address: '0x34a9fe2da0f793c69b68a347f5726eb4f5f5fd5c',
-	firstName: 'Emmanuel',
-	lastName: 'Vallon',
+	address: '0x9746ab8d4856c1f66176f1ea8863caccd3f4702c',
+	firstName: 'Bruce',
+	lastName: 'Delorme',
 };
 contract.addMember(member.address, member.firstName, member.lastName, options, (e, r) => { 
 	if(!e)
