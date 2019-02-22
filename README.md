@@ -57,6 +57,7 @@ Pour intéragir avec le contrat avec node et web3.js:
 ### Configuration:
 
 ```
+cd tests/node-web3js
 cp config.template.json config.json
 vi config.json
 ```
@@ -64,7 +65,6 @@ vi config.json
 ### Lancement
 
 ```
-cd tests/node-web3js
 npm install
 node app.js
 ```
