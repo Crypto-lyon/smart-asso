@@ -25,7 +25,7 @@
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 let HDWalletProvider = require("truffle-hdwallet-provider");
-let mnemonic = "foot tape guess scale grant need snow proud switch smart hungry extra";
+const authInfo = require('./auth.json');
 
 module.exports = {
   /**
@@ -74,7 +74,7 @@ module.exports = {
 
     // Useful for private networks
     private: {
-      provider: () => new HDWalletProvider(mnemonic, `https://dev.ethereum-lyon.fr`),
+      provider: () => new HDWalletProvider(authInfo.mnemonic, authInfo.node),
       network_id: "*",       // Any network (default: none)
     }
   },

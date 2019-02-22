@@ -1,0 +1,14 @@
+{
+  "name": "smart-asso-nodeweb3-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Crypto Lyon",
+  "license": "MIT",
+  "dependencies": {
+    "web3": "^0.20.7"
+  }
+}

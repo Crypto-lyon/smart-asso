@@ -1,58 +1,77 @@
-# Todo
+Smart Asso - DAO tests
+===============================
 
-tester `ethers.js`
 
-# Tips
+https://www.crypto-lyon.fr
 
-### Ganache CLI pour lancer une EVM en local (sinon utiliser https://dev.ethereum-lyon.fr)
+
+Pourquoi ce projet ?
+----------------
+
+Ce projet est né à l'initiative des membres de l'association Crypto Lyon.
+Il vise à faciliter les prises de décisions et l'organisation de structures 
+comme des coopératives, associations ou partis politiques.
+
+Developpement
+-------------------
+
+### Truffle config
+
+#### Installation
 ```
-npm install -g ganache-cli
-# puis ganache-cli
+npm install -g truffle
 ```
 
-### Compilation
-
-Permet de générer les fichier ABI
+#### Compiler les contrats
 ```
+cd contracts
 truffle compile
 ```
 
-### Déployement:
+#### Déployer les contrats
+
+Sur un wallet ganache en local:
 ```
-truffle deploy --reset --network development # après setup de truffle-config.js
-OU
+npm install -g ganache-cli # https://www.npmjs.com/package/ganache-cli
+ganache-cli
+truffle deploy --reset --network development
+```
+
+Sur le wallet dev.ethereum-lyon.fr:
+
+```
+# configurer l'authentification pour le HDWallet
+cp auth.template.json auth.json
+vi auth.json
+# puis 
 truffle deploy --reset --network private
 ```
 
-### Remix
-`http://remix.ethereum.org`
-Dans _Run_ seletionner _injected web3_ pour utiliser metamask
+Les différents networks sont configurables dans `truffle-config.js`.
 
+Tests
+-------
 
-### Web3js
-`https://www.npmjs.com/package/web3`
+Pour intéragir avec le contrat avec node et web3.js:
 
+### Configuration:
 
 ```
-sudo npm install web3:0.20.7 --save
+cp config.template.json config.json
+vi config.json
 ```
 
-# Sources
+### Lancement
 
-##  ERC 20
+```
+cd tests/node-web3js
+npm install
+node app.js
+```
 
-`https://eips.ethereum.org/EIPS/eip-20`
 
-###  tuto
-`http://erc20token.sonnguyen.ws/en/latest/`
+License
+-------
 
-ganache-cli (`https://www.npmjs.com/package/ganache-cli`) au lieu de ethereumjs-testrpc
-
-On peut aussi utiliser le soft "desktop" pour avoir l'explorer en GUI.
-
-### OpenZeppelin implementation
-`https://github.com/OpenZeppelin/openzeppelin-solidity/tree/master/contracts/token/ERC20`
-
-### autre implémentation (ConsenSys) :
-
-`https://github.com/ConsenSys/Tokens/tree/master/contracts/eip20`
+MIT
+https://opensource.org/licenses/MIT.

@@ -76,9 +76,5 @@ contract Organization is Mortal {
         return membersAddress.length;
     }
 
-    // liste des membres à jours de cotiz
-    // date cotiz
-    // update member
-    // emit?
 
 }
