@@ -52,7 +52,7 @@ Les différents networks sont configurables dans `truffle-config.js`.
 Tests
 -------
 
-Pour intéragir avec le contrat avec node et web3.js:
+Pour intéragir avec le contrat en utilisant node et web3.js:
 
 ### Configuration:
 
