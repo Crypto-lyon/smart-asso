@@ -1,5 +1,7 @@
 {
-    "node": "node address",
-    "mnemonic": ""
-    
+    "ropsten": {
+        "node": "https://ropsten.infura.io/v3",
+        "mnemonic": "",
+        "key": ""
+    }
 }

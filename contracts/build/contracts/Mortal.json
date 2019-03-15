@@ -17,14 +17,14 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060f38061005f6000396000f3fe608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806341c0e1b5146044575b600080fd5b348015604f57600080fd5b5060566058565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141560c5573373ffffffffffffffffffffffffffffffffffffffff16ff5b56fea165627a7a723058205f206ed85e873fc76fb54bc0cb828eb2a9b6b1743949b5b41fb6e10832a346a30029",
-  "deployedBytecode": "0x608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806341c0e1b5146044575b600080fd5b348015604f57600080fd5b5060566058565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141560c5573373ffffffffffffffffffffffffffffffffffffffff16ff5b56fea165627a7a723058205f206ed85e873fc76fb54bc0cb828eb2a9b6b1743949b5b41fb6e10832a346a30029",
-  "sourceMap": "34:371:1:-;;;220:44;8:9:-1;5:2;;;30:1;27;20:12;5:2;220:44:1;251:10;243:5;;:18;;;;;;;;;;;;;;;;;;34:371;;;;;;",
-  "deployedSourceMap": "34:371:1:-;;;;;;;;;;;;;;;;;;;;;;;;326:77;;8:9:-1;5:2;;;30:1;27;20:12;5:2;326:77:1;;;;;;;369:5;;;;;;;;;;;355:19;;:10;:19;;;351:49;;;389:10;376:24;;;351:49;326:77::o",
+  "bytecode": "0x608060405234801561001057600080fd5b5060008054600160a060020a0319163317905560a7806100316000396000f3fe608060405260043610603e5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b581146043575b600080fd5b348015604e57600080fd5b5060556057565b005b60005473ffffffffffffffffffffffffffffffffffffffff1633141560795733ff5b56fea165627a7a7230582094e68269660d65d3ace4be67a8e5624d9413a5a442117901fce4058d4591e64e0029",
+  "deployedBytecode": "0x608060405260043610603e5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b581146043575b600080fd5b348015604e57600080fd5b5060556057565b005b60005473ffffffffffffffffffffffffffffffffffffffff1633141560795733ff5b56fea165627a7a7230582094e68269660d65d3ace4be67a8e5624d9413a5a442117901fce4058d4591e64e0029",
+  "sourceMap": "34:371:1:-;;;220:44;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;243:5:1;:18;;-1:-1:-1;;;;;;243:18:1;251:10;243:18;;;34:371;;;;;;",
+  "deployedSourceMap": "34:371:1:-;;;;;;;;;;;;;;;;;;;;;;;326:77;;8:9:-1;5:2;;;30:1;27;20:12;5:2;326:77:1;;;;;;;369:5;;;;355:10;:19;351:49;;;389:10;376:24;351:49;326:77::o",
   "source": "pragma solidity >=0.4.22 <0.6.0;\n\ncontract Mortal {\n    /* Define variable owner of the type address */\n    address owner;\n\n    /* This constructor is executed at initialization and sets the owner of the contract */\n    constructor() public { owner = msg.sender; }\n\n    /* Function to recover the funds on the contract */\n    function kill() public { if (msg.sender == owner) selfdestruct(msg.sender); }\n}",
-  "sourcePath": "/home/bruce/git/solidity-tests/contracts/contracts/Mortal.sol",
+  "sourcePath": "/home/bruce/git/crypto-lyon/smart-asso/contracts/contracts/Mortal.sol",
   "ast": {
-    "absolutePath": "/home/bruce/git/solidity-tests/contracts/contracts/Mortal.sol",
+    "absolutePath": "/home/bruce/git/crypto-lyon/smart-asso/contracts/contracts/Mortal.sol",
     "exportedSymbols": {
       "Mortal": [
         84
@@ -124,7 +124,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 355,
+                        "referencedDeclaration": 431,
                         "src": "251:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -208,7 +208,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 355,
+                        "referencedDeclaration": 431,
                         "src": "355:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -266,7 +266,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 355,
+                            "referencedDeclaration": 431,
                             "src": "389:3:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -299,7 +299,7 @@
                         "name": "selfdestruct",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 363,
+                        "referencedDeclaration": 439,
                         "src": "376:12:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_selfdestruct_nonpayable$_t_address_payable_$returns$__$",
@@ -360,7 +360,7 @@
     "src": "0:405:1"
   },
   "legacyAST": {
-    "absolutePath": "/home/bruce/git/solidity-tests/contracts/contracts/Mortal.sol",
+    "absolutePath": "/home/bruce/git/crypto-lyon/smart-asso/contracts/contracts/Mortal.sol",
     "exportedSymbols": {
       "Mortal": [
         84
@@ -460,7 +460,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 355,
+                        "referencedDeclaration": 431,
                         "src": "251:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -544,7 +544,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 355,
+                        "referencedDeclaration": 431,
                         "src": "355:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -602,7 +602,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 355,
+                            "referencedDeclaration": 431,
                             "src": "389:3:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -635,7 +635,7 @@
                         "name": "selfdestruct",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 363,
+                        "referencedDeclaration": 439,
                         "src": "376:12:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_selfdestruct_nonpayable$_t_address_payable_$returns$__$",
@@ -697,11 +697,11 @@
   },
   "compiler": {
     "name": "solc",
-    "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
+    "version": "0.5.0+commit.1d4f565a.Linux.g++"
   },
   "networks": {},
   "schemaVersion": "3.0.2",
-  "updatedAt": "2019-02-22T11:32:02.488Z",
+  "updatedAt": "2019-03-15T22:47:35.044Z",
   "devdoc": {
     "methods": {}
   },

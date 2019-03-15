@@ -11,12 +11,22 @@ contract Organization is Mortal {
         uint id;
     }
 
+    struct Request {
+        string firstName;
+        string lastName;
+        bool exists;
+        uint id;
+    }
+
     string name;
     string id;
     string website;
 
     mapping(address => Member) members;
     address[] membersAddress;
+
+    mapping(address => Member) requests;
+    address[] requestsAddress;
 
     // Init organization
     constructor(string memory _name, string memory _id, string memory _website) public {
@@ -29,6 +39,20 @@ contract Organization is Mortal {
     // Returns organization informations
     function getOrganizationInfo() public view returns (string memory, string memory, string memory, uint) {
         return (name, id, website, getMembersCount());
+    }
+
+    function requestMembership(address _address, string memory _firstName, string memory _lastName) public  returns (string memory) {
+
+        if(requests[_address].exists == true) {
+            revert("User already made request with this address.");
+        }
+
+        requests[_address].firstName = _firstName;
+        requests[_address].lastName = _lastName;
+        requests[_address].exists = true;
+        requests[_address].id = requestsAddress.push(_address);
+
+        return requests[_address].firstName;
     }
 
     // Add a new member
