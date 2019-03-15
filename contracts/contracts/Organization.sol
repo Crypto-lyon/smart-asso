@@ -28,6 +28,8 @@ contract Organization is Mortal {
     mapping(address => Member) requests;
     address[] requestsAddress;
 
+    event NewMembershipRequest(address indexed purchaser, string firstName, string lastName);
+
     // Init organization
     constructor(string memory _name, string memory _id, string memory _website) public {
         name = _name;
@@ -52,6 +54,7 @@ contract Organization is Mortal {
         requests[_address].exists = true;
         requests[_address].id = requestsAddress.push(_address);
 
+        emit NewMembershipRequest(_address, _firstName, _lastName);
         return requests[_address].firstName;
     }
 
