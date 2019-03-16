@@ -16,6 +16,8 @@ contract Organization is Mortal {
         string lastName;
         bool exists;
         uint id;
+        uint acceptedcount;
+        uint rejectedcount;
     }
 
     string name;
@@ -25,10 +27,12 @@ contract Organization is Mortal {
     mapping(address => Member) members;
     address[] membersAddress;
 
-    mapping(address => Member) requests;
+    mapping(address => Request) requests;
     address[] requestsAddress;
 
     event NewMembershipRequest(address requester, string firstName, string lastName);
+
+    event VotedForNewMember(address member, address requester, bool decision);
 
     // Init organization
     constructor(string memory _name, string memory _id, string memory _website) public {
@@ -56,6 +60,9 @@ contract Organization is Mortal {
         requests[_address].firstName = _firstName;
         requests[_address].lastName = _lastName;
         requests[_address].exists = true;
+        requests[_address].acceptedcount = 0;
+        requests[_address].rejectedcount = 0;
+        requests[_address].exists = true;
         requests[_address].id = requestsAddress.push(_address);
 
         emit NewMembershipRequest(_address, _firstName, _lastName);
@@ -77,6 +84,26 @@ contract Organization is Mortal {
         members[_address].id = membersAddress.push(_address);
 
         return members[_address].firstName;
+    }
+
+    function acceptNewMembership(address _requester, bool _decision) public returns (bool) {
+        require(isAddressAlowed(msg.sender), "Address not allowed");
+
+        if(requests[_requester].exists != true) {
+            revert("Unknown address in requester list");
+        }
+        
+        if(_decision == true){
+            requests[_requester].acceptedcount ++;
+        } else {
+            requests[_requester].rejectedcount ++;
+        }
+
+        emit VotedForNewMember(msg.sender, _requester, _decision);
+
+        // todo check if quorum is reached and add or remove membership
+
+        return _decision;
     }
 
     // Only organization members or owners can view others members
