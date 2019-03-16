@@ -12,7 +12,7 @@ contract Organization is Mortal {
     }
 
     // A request made to add a new member to the organization
-    struct accessRequest {
+    struct AccessRequest {
         string firstName;
         string lastName;
         bool exists;
@@ -27,15 +27,16 @@ contract Organization is Mortal {
     string website;
 
     // All the members of the org
-    mapping(address => Member) members;
-    address[] membersAddresses;
+    mapping(address => Member) public members;
+    address[] public membersAddresses;
 
     // All the membership requests
-    mapping(address => accessRequest) accRequests;
-    address[] accRequestsAddresses;
+    mapping(address => AccessRequest) public accessRequests;
+    address[] public accessRequestsAddresses;
 
     event NewMembershipRequest(address requester, string firstName, string lastName);
-    event VotedForNewMember(address member, address requester, bool decision);
+    event VotedForNewMember(address indexed voter, address requester, bool decision);
+    event NewMemberAccepted(address requester, string firstName, string lastName);
 
     modifier onlyMember {
         require(members[msg.sender].exists, "Address is not a member");
@@ -43,75 +44,83 @@ contract Organization is Mortal {
     }
 
     // Init organization
-    constructor(string memory _name, string memory _id, string memory _website) public {
+    constructor(
+        string memory _name,
+        string memory _id,
+        string memory _website) public 
+    {
         name = _name;
         id = _id;
         website = _website;
         membersAddresses.length = 0;
+        
         // The owner is the first member
-        members[msg.sender].firstName = "Jimmy";
-        members[msg.sender].lastName = "Chambrade";
-        members[msg.sender].exists = true;
-        members[msg.sender].availableTokens = 100;
-        members[msg.sender].id = membersAddresses.push(msg.sender);
+        AccessRequest memory admin = AccessRequest({
+            firstName: "admin",
+            lastName: "admin",
+            exists: true,
+            id: 0,
+            acceptedcount: 0
+        });
+        _addMember(admin, msg.sender);
     }
 
     // Returns organization informations
-    function getOrganizationInfo() public view returns (string memory, string memory, string memory, uint) {
+    function getOrganizationInfo() public view returns (
+        string memory orgName,
+        string memory orgId,
+        string memory orgWebsite,
+        uint orgMembersCount)
+    {
         return (name, id, website, getMembersCount());
     }
 
     // Request a membership for a given address, name, and surname
-    function requestMembership (address _address, string memory _firstName, string memory _lastName) public {
-        require(!accRequests[_address].exists, "A request has already been made for this address");
-        require(!members[_address].exists, "This user is already a member of the organization");
+    function requestMembership (string memory _firstName, string memory _lastName) public {
+        require(!accessRequests[msg.sender].exists, "A request has already been made for this address");
+        require(!members[msg.sender].exists, "This user is already a member of the organization");
 
         // Creation of a membership request for this "person"
-        accRequests[_address].firstName = _firstName;
-        accRequests[_address].lastName = _lastName;
-        accRequests[_address].exists = true;
-        accRequests[_address].acceptedcount = 0;
-        accRequests[_address].id = accRequestsAddresses.push(_address);
+        accessRequests[msg.sender].firstName = _firstName;
+        accessRequests[msg.sender].lastName = _lastName;
+        accessRequests[msg.sender].exists = true;
+        accessRequests[msg.sender].acceptedcount = 0;
+        accessRequests[msg.sender].id = accessRequestsAddresses.push(msg.sender);
 
-        emit NewMembershipRequest(_address, _firstName, _lastName);
+        emit NewMembershipRequest(msg.sender, _firstName, _lastName);
     }
 
     // Adds a member to the list given a membership request
-    function addMember(accessRequest memory request, address _address) private returns (bool) {
+    function _addMember(AccessRequest memory request, address _address) private returns (bool) {
         members[_address].firstName = request.firstName;
         members[_address].lastName = request.lastName;
-        members[_address].exists = true;
+        members[_address].exists = request.exists;
         members[_address].availableTokens = 100;
         members[_address].id = membersAddresses.push(_address);
         
+        emit NewMemberAccepted(_address, members[_address].firstName, members[_address].lastName);
+
         return true;
     }
 
     // Vote from a member to accept or decline a membership request
     function acceptNewMembership(address _requester) public onlyMember {
-        require(!accRequests[_requester].exists, "No request have been made for this address");
-        require(!accRequests[_requester].hasVoted[msg.sender]); // You can't vote twice if you voted yes, otherwise you can switch (you know people do change..)
+        require(accessRequests[_requester].exists, "No request have been made for this address");
+        // You can't vote twice if you voted yes, otherwise you can switch (you know people do change..)
+        require(!accessRequests[_requester].hasVoted[msg.sender], "You can't vote twice");
         
-        accRequests[_requester].hasVoted[msg.sender] = true; // This address won't be able to vote anymore
-        ++accRequests[_requester].acceptedcount; // __*Then*__ we increase the counter
-        if (accRequests[_requester].acceptedcount > membersAddresses.length / 2) {
+        accessRequests[_requester].hasVoted[msg.sender] = true; // This address won't be able to vote anymore
+        ++accessRequests[_requester].acceptedcount; // __*Then*__ we increase the counter
+
+        emit VotedForNewMember(msg.sender, _requester, true);
+
+        if (accessRequests[_requester].acceptedcount > membersAddresses.length / 2) {
             // If a membership request reaches majority, it is accepted
-            if (!addMember(accRequests[_requester], _requester)) {
-                revert();
+            if (!_addMember(accessRequests[_requester], _requester)) {
+                revert("error while inserting new member");
             }
-            delete accRequests[_requester];
-            emit VotedForNewMember(msg.sender, _requester, true);
+            delete accessRequests[_requester];
         }
-    }
-
-    // Returns member informations
-    function getMember(address _address) public view returns (address, string memory, string memory, uint, uint) {
-        return (_address, members[_address].firstName, members[_address].lastName, members[_address].availableTokens, members[_address].id);
-    }
-
-    // Returns member list
-    function getMemberList() public view returns (address[] memory) {
-        return membersAddresses;
     }
 
     // Returns members count
