@@ -49,6 +49,10 @@ contract Organization is Mortal {
             revert("User already made request with this address.");
         }
 
+        if(members[_address].exists == true) {
+            revert("User is already a member of organization");
+        }
+
         requests[_address].firstName = _firstName;
         requests[_address].lastName = _lastName;
         requests[_address].exists = true;
