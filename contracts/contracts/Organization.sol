@@ -122,7 +122,7 @@ contract Organization is Mortal {
     }
 
     // Adds a proposal
-    function _addProposal(bytes32 hash, string title) private returns (bool) {
+    function _addProposal(bytes32 hash, string memory title) private returns (bool) {
         proposals[hash].title = title;
         proposals[hash].accepted = false;
         proposals[hash].exists = true;
@@ -162,7 +162,7 @@ contract Organization is Mortal {
         delRequests[_address].exists = true;
     }
 
-    function submitProposal (string title) public onlyMember {
+    function submitProposal (string memory title) public onlyMember {
         bytes32 hash = keccak256(abi.encodePacked(title));
         require(!proposals[hash].exists, "This proposal has already been submitted");
         proposals[hash].title = title;
