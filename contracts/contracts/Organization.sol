@@ -141,7 +141,7 @@ contract Organization is Mortal {
     // Request a membership for a given address, name, and surname
     function requestMembership (string memory _firstName, string memory _lastName) public {
         require(!accessRequests[msg.sender].exists, "A request has already been made for this address");
-        require(members[msg.sender].exists, "This user is already a member of the organization");
+        require(!members[msg.sender].exists, "This user is already a member of the organization");
 
         // Creation of a membership request for this "person"
         accessRequests[msg.sender].firstName = _firstName;
