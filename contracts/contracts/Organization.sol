@@ -105,7 +105,7 @@ contract Organization is Mortal {
         members[_address].lastName = _request.lastName;
         members[_address].exists = _request.exists;
         members[_address].availableTokens = 100;
-        members[_address].id = membersAddresses.push(_address);
+        members[_address].id = membersAddresses.push(_address) - 1; // Length - 1 = key
         
         emit NewMemberAccepted(_address, members[_address].firstName, members[_address].lastName);
 
@@ -148,7 +148,7 @@ contract Organization is Mortal {
         accessRequests[msg.sender].lastName = _lastName;
         accessRequests[msg.sender].exists = true;
         accessRequests[msg.sender].acceptedcount = 0;
-        accessRequests[msg.sender].id = accessRequestsAddresses.push(msg.sender);
+        accessRequests[msg.sender].id = accessRequestsAddresses.push(msg.sender) - 1;
 
         emit NewMembershipRequest(msg.sender, _firstName, _lastName);
     }
@@ -158,7 +158,7 @@ contract Organization is Mortal {
         require(delRequests[_address].exists, "A request has already been made to remove this member");
 
         delRequests[_address].acceptedCount = 0;
-        delRequests[_address].id = delRequestsAddresses.push(_address);
+        delRequests[_address].id = delRequestsAddresses.push(_address) - 1;
         delRequests[_address].exists = true;
     }
 
@@ -169,7 +169,7 @@ contract Organization is Mortal {
         proposals[hash].exists = true;
         proposals[hash].hasVoted[msg.sender];
         ++proposals[hash].acceptedCount;
-        proposals[hash].id = proposalsHashes.push(hash);
+        proposals[hash].id = proposalsHashes.push(hash) - 1;
         emit NewProposalSubmitted(hash, title);
     }
 
