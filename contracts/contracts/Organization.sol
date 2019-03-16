@@ -21,6 +21,14 @@ contract Organization is Mortal {
         uint acceptedcount; // A counter to avoid a FUCKING BIG GAZ CONSUMING for loop to retrieve the %
     }
 
+    // A request to remove a member from the organization
+    struct DeletionRequest {
+        bool exists;
+        uint id;
+        mapping(address => bool) hasVoted;
+        uint acceptedCount;
+    }
+
     // Organization informations
     string name;
     string id;
@@ -34,9 +42,16 @@ contract Organization is Mortal {
     mapping(address => AccessRequest) public accessRequests;
     address[] public accessRequestsAddresses;
 
+    // All the deletion requests
+    mapping(address => DeletionRequest) public delRequests;
+    address[] public delRequestsAddresses;
+
     event NewMembershipRequest(address requester, string firstName, string lastName);
-    event VotedForNewMember(address indexed voter, address requester, bool decision);
+    event NewDeletionRequest(address memberAddress, string firstName, string lastName);
+    event VotedForNewMember(address indexed voter, address requester);
+    event VotedForDelMember(address indexed voter, address memberAddress); // The decision will be true, or won't be
     event NewMemberAccepted(address requester, string firstName, string lastName);
+    event MemberDeleted(address memberAddress, string firstName, string lastName);
 
     modifier onlyMember {
         require(members[msg.sender].exists, "Address is not a member");
@@ -65,14 +80,26 @@ contract Organization is Mortal {
         _addMember(admin, msg.sender);
     }
 
-    // Returns organization informations
-    function getOrganizationInfo() public view returns (
-        string memory orgName,
-        string memory orgId,
-        string memory orgWebsite,
-        uint orgMembersCount)
-    {
-        return (name, id, website, getMembersCount());
+    // Adds a member to the list given a membership request
+    function _addMember(AccessRequest memory _request, address _address) private returns (bool) {
+        members[_address].firstName = _request.firstName;
+        members[_address].lastName = _request.lastName;
+        members[_address].exists = _request.exists;
+        members[_address].availableTokens = 100;
+        members[_address].id = membersAddresses.push(_address);
+        
+        emit NewMemberAccepted(_address, members[_address].firstName, members[_address].lastName);
+
+        return true;
+    }
+
+    // Removes a member from the organization
+    function _delMember(DeletionRequest memory _request, address _address) private returns (bool) {
+        emit MemberDeleted(_address, members[_address].firstName, members[_address].lastName);
+        delete membersAddresses[members[_address].id];
+        delete members[_address];
+
+        return true;
     }
 
     // Request a membership for a given address, name, and surname
@@ -90,17 +117,13 @@ contract Organization is Mortal {
         emit NewMembershipRequest(msg.sender, _firstName, _lastName);
     }
 
-    // Adds a member to the list given a membership request
-    function _addMember(AccessRequest memory request, address _address) private returns (bool) {
-        members[_address].firstName = request.firstName;
-        members[_address].lastName = request.lastName;
-        members[_address].exists = request.exists;
-        members[_address].availableTokens = 100;
-        members[_address].id = membersAddresses.push(_address);
-        
-        emit NewMemberAccepted(_address, members[_address].firstName, members[_address].lastName);
+    function requestDeletion (address _address) public {
+        require(members[_address].exists, "This address does not represent a member of the organization");
+        require(delRequests[_address].exists, "A request has already been made to remove this member");
 
-        return true;
+        delRequests[_address].acceptedCount = 0;
+        delRequests[_address].id = delRequestsAddresses.push(_address);
+        delRequests[_address].exists = true;
     }
 
     // Vote from a member to accept or decline a membership request
@@ -112,17 +135,46 @@ contract Organization is Mortal {
         accessRequests[_requester].hasVoted[msg.sender] = true; // This address won't be able to vote anymore
         ++accessRequests[_requester].acceptedcount; // __*Then*__ we increase the counter
 
-        emit VotedForNewMember(msg.sender, _requester, true);
+        emit VotedForNewMember(msg.sender, _requester);
 
-        if (accessRequests[_requester].acceptedcount > membersAddresses.length / 2) {
+        if (accessRequests[_requester].acceptedcount > membersAddresses.length/2) {
             // If a membership request reaches majority, it is accepted
             if (!_addMember(accessRequests[_requester], _requester)) {
-                revert("error while inserting new member");
+                revert("Error while inserting new member");
             }
+            delete accessRequestsAddresses[accessRequests[_requester].id];
             delete accessRequests[_requester];
         }
     }
 
+    // Vote for a member to be removed from the organization
+    function acceptMemberDeletion(address _memberAddress) public onlyMember {
+        require(delRequests[_memberAddress].exists, "No request have been made to remove this member");
+        require(!delRequests[_memberAddress].hasVoted[msg.sender], "You have already voted to remove this member");
+
+        delRequests[_memberAddress].hasVoted[msg.sender] = true;
+        ++delRequests[_memberAddress].acceptedCount;
+        emit VotedForDelMember(msg.sender, _memberAddress);
+        if (delRequests[_memberAddress].acceptedCount > membersAddresses.length/2) {
+            // Game over
+            if (!_delMember(delRequests[_memberAddress], _memberAddress)) {
+                revert("Error when deleting member");
+            }
+            delete delRequestsAddresses[delRequests[_memberAddress].id];
+            delete delRequests[_memberAddress];
+        }
+    }
+
+    // Returns organization informations
+    function getOrganizationInfo() public view returns (
+        string memory orgName,
+        string memory orgId,
+        string memory orgWebsite,
+        uint orgMembersCount)
+    {
+        return (name, id, website, getMembersCount());
+    }
+ 
     // Returns members count
     function getMembersCount() public view returns(uint) {
         return membersAddresses.length;
