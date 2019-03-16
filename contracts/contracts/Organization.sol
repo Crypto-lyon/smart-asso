@@ -94,7 +94,7 @@ contract Organization is Mortal {
     }
 
     // Removes a member from the organization
-    function _delMember(DeletionRequest memory _request, address _address) private returns (bool) {
+    function _delMember(address _address) private returns (bool) {
         emit MemberDeleted(_address, members[_address].firstName, members[_address].lastName);
         delete membersAddresses[members[_address].id];
         delete members[_address];
@@ -157,7 +157,7 @@ contract Organization is Mortal {
         emit VotedForDelMember(msg.sender, _memberAddress);
         if (delRequests[_memberAddress].acceptedCount > membersAddresses.length/2) {
             // Game over
-            if (!_delMember(delRequests[_memberAddress], _memberAddress)) {
+            if (!_delMember(_memberAddress)) {
                 revert("Error when deleting member");
             }
             delete delRequestsAddresses[delRequests[_memberAddress].id];
@@ -178,5 +178,10 @@ contract Organization is Mortal {
     // Returns members count
     function getMembersCount() public view returns(uint) {
         return membersAddresses.length;
+    }
+
+    // Returns potential members count
+    function getAccessRequestsCount() public view returns(uint) {
+        return accessRequestsAddresses.length;
     }
 }
