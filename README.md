@@ -49,6 +49,19 @@ truffle deploy --reset --network private
 
 Les différents networks sont configurables dans `truffle-config.js`.
 
+Tools
+-------
+
+### Truffle flatener:
+
+Utile pour déployer dans remix et pour publier le code du contrat dans etherscan.
+
+```
+truffle-flattener contracts/Organization.sol > flat.sol
+```
+
+
+
 Tests
 -------
 
