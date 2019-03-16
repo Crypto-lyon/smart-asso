@@ -52,20 +52,14 @@ contract Organization is Mortal {
     }
 
     function requestMembership (address _address, string memory _firstName, string memory _lastName) public  returns (string memory) {
-        if(requests[_address].exists == true) {
-            revert("User already made request with this address.");
-        }
-
-        if(members[_address].exists == true) {
-            revert("User is already a member of organization");
-        }
+        require(!requests[_address].exists, "A request has already been made for this address");
+        require(!members[_address].exists, "This user is already a member of the organization");
 
         requests[_address].firstName = _firstName;
         requests[_address].lastName = _lastName;
         requests[_address].exists = true;
         requests[_address].acceptedcount = 0;
         requests[_address].rejectedcount = 0;
-        requests[_address].exists = true;
         requests[_address].id = requestsAddress.push(_address);
 
         emit NewMembershipRequest(_address, _firstName, _lastName);
@@ -74,9 +68,7 @@ contract Organization is Mortal {
 
     // Add a new member
     function addMember(address _address, string memory _firstName, string memory _lastName) public onlyMember returns (string memory) {
-        if(members[_address].exists == true) {
-            revert("User already exists.");
-        }
+        require(!members[_address].exists, "User already exists.");
 
         members[_address].firstName = _firstName;
         members[_address].lastName = _lastName;
@@ -88,9 +80,7 @@ contract Organization is Mortal {
     }
 
     function acceptNewMembership(address _requester, bool _decision) public onlyMember returns (bool) {
-        if(requests[_requester].exists != true) {
-            revert("Unknown address in requester list");
-        }
+        require(!requests[_requester].exists, "Unknown address in requester list");
         
         if(_decision == true){
             requests[_requester].acceptedcount ++;
