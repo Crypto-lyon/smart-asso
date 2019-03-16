@@ -28,7 +28,7 @@ contract Organization is Mortal {
     mapping(address => Member) requests;
     address[] requestsAddress;
 
-    event NewMembershipRequest(address indexed purchaser, string firstName, string lastName);
+    event NewMembershipRequest(address requester, string firstName, string lastName);
 
     // Init organization
     constructor(string memory _name, string memory _id, string memory _website) public {
