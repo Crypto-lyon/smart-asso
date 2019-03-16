@@ -31,8 +31,12 @@ contract Organization is Mortal {
     address[] requestsAddress;
 
     event NewMembershipRequest(address requester, string firstName, string lastName);
-
     event VotedForNewMember(address member, address requester, bool decision);
+
+    modifier onlyMember {
+        require(members[msg.sender].exists, "Address is not a member");
+        _;
+    }
 
     // Init organization
     constructor(string memory _name, string memory _id, string memory _website) public {
@@ -47,8 +51,7 @@ contract Organization is Mortal {
         return (name, id, website, getMembersCount());
     }
 
-    function requestMembership(address _address, string memory _firstName, string memory _lastName) public  returns (string memory) {
-
+    function requestMembership (address _address, string memory _firstName, string memory _lastName) public  returns (string memory) {
         if(requests[_address].exists == true) {
             revert("User already made request with this address.");
         }
@@ -70,9 +73,7 @@ contract Organization is Mortal {
     }
 
     // Add a new member
-    function addMember(address _address, string memory _firstName, string memory _lastName) public  returns (string memory) {
-        require(msg.sender == owner, "User must be owner to add Member");
-
+    function addMember(address _address, string memory _firstName, string memory _lastName) public onlyMember returns (string memory) {
         if(members[_address].exists == true) {
             revert("User already exists.");
         }
@@ -86,9 +87,7 @@ contract Organization is Mortal {
         return members[_address].firstName;
     }
 
-    function acceptNewMembership(address _requester, bool _decision) public returns (bool) {
-        require(isAddressAlowed(msg.sender), "Address not allowed");
-
+    function acceptNewMembership(address _requester, bool _decision) public onlyMember returns (bool) {
         if(requests[_requester].exists != true) {
             revert("Unknown address in requester list");
         }
@@ -106,26 +105,13 @@ contract Organization is Mortal {
         return _decision;
     }
 
-    // Only organization members or owners can view others members
-    function isAddressAlowed(address _address) public view returns (bool) {
-        if(members[_address].exists == true || _address == owner) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     // Returns member informations
     function getMember(address _address) public view returns (address, string memory, string memory, uint, uint) {
-        require(isAddressAlowed(msg.sender), "Address not allowed");
-        require(members[_address].exists == true, "User not found.");
-
         return (_address, members[_address].firstName, members[_address].lastName, members[_address].availableTokens, members[_address].id);
     }
 
-    // Return member list
+    // Returns member list
     function getMemberList() public view returns (address[] memory) {
-        require(isAddressAlowed(msg.sender), "Address not allowed");
         return membersAddress;
     }
 
@@ -133,6 +119,4 @@ contract Organization is Mortal {
     function getMembersCount() public view returns(uint) {
         return membersAddress.length;
     }
-
-
 }
