@@ -29,6 +29,16 @@ contract Organization is Mortal {
         uint acceptedCount;
     }
 
+    // A decision to be voted by the members. A proposal is identified by its hash.
+    struct Proposal {
+        string title;
+        bool exists;
+        bool accepted;
+        uint id;
+        mapping(address => bool) hasVoted;
+        uint acceptedCount;
+    }
+
     // Organization informations
     string name;
     string id;
@@ -46,12 +56,21 @@ contract Organization is Mortal {
     mapping(address => DeletionRequest) public delRequests;
     address[] public delRequestsAddresses;
 
+    // All the proposals
+    mapping(bytes32 => Proposal) public proposals;
+    bytes32[] public proposalsHashes;
+
     event NewMembershipRequest(address requester, string firstName, string lastName);
     event NewDeletionRequest(address memberAddress, string firstName, string lastName);
     event VotedForNewMember(address indexed voter, address requester);
     event VotedForDelMember(address indexed voter, address memberAddress); // The decision will be true, or won't be
     event NewMemberAccepted(address requester, string firstName, string lastName);
     event MemberDeleted(address memberAddress, string firstName, string lastName);
+
+    event NewProposalSubmitted(bytes32 hash, string title);
+    event VotedForProposal(bytes32 hash, string title, address indexed voter);
+    event ProposalAccepted(bytes32 hash, string title);
+    event ProposalDeleted(bytes32 hash, string title);
 
     modifier onlyMember {
         require(members[msg.sender].exists, "Address is not a member");
@@ -102,10 +121,27 @@ contract Organization is Mortal {
         return true;
     }
 
+    // Adds a proposal
+    function _addProposal(bytes32 hash, string title) private returns (bool) {
+        proposals[hash].title = title;
+        proposals[hash].accepted = false;
+        proposals[hash].exists = true;
+        emit NewProposalSubmitted(hash, title);
+
+        return true;
+    }
+
+    // Removes a proposal
+    function _removeProposal(bytes32 hash) private returns (bool) {
+        emit ProposalDeleted(hash, proposals[hash].title);
+        delete proposalsHashes[proposals[hash].id];
+        delete proposals[hash];
+    }
+
     // Request a membership for a given address, name, and surname
     function requestMembership (string memory _firstName, string memory _lastName) public {
         require(!accessRequests[msg.sender].exists, "A request has already been made for this address");
-        require(!members[msg.sender].exists, "This user is already a member of the organization");
+        require(members[msg.sender].exists, "This user is already a member of the organization");
 
         // Creation of a membership request for this "person"
         accessRequests[msg.sender].firstName = _firstName;
@@ -124,6 +160,17 @@ contract Organization is Mortal {
         delRequests[_address].acceptedCount = 0;
         delRequests[_address].id = delRequestsAddresses.push(_address);
         delRequests[_address].exists = true;
+    }
+
+    function submitProposal (string title) public onlyMember {
+        bytes32 hash = keccak256(abi.encodePacked(title));
+        require(!proposals[hash].exists, "This proposal has already been submitted");
+        proposals[hash].title = title;
+        proposals[hash].exists = true;
+        proposals[hash].hasVoted[msg.sender];
+        ++proposals[hash].acceptedCount;
+        proposals[hash].id = proposalsHashes.push(hash);
+        emit NewProposalSubmitted(hash, title);
     }
 
     // Vote from a member to accept or decline a membership request
@@ -162,6 +209,19 @@ contract Organization is Mortal {
             }
             delete delRequestsAddresses[delRequests[_memberAddress].id];
             delete delRequests[_memberAddress];
+        }
+    }
+
+    function acceptProposal(bytes32 hash) public onlyMember {
+        require(!proposals[hash].exists, "This proposal does not exist");
+        require(!proposals[hash].hasVoted[msg.sender], "You can't vote twice");
+
+        proposals[hash].hasVoted[msg.sender] = true;
+        ++proposals[hash].acceptedCount;
+        emit VotedForProposal(hash, proposals[hash].title, msg.sender);
+        if (proposals[hash].acceptedCount > membersAddresses.length/2) {
+            proposals[hash].accepted = true; // Congratulations !!
+            emit ProposalAccepted(hash, proposals[hash].title);
         }
     }
 
